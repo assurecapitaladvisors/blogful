@@ -6,10 +6,12 @@
                 {{ post.datetime | dateformat("%d/%m/%y") }}
             </li>
         </ul>
+        <a href="/post/{{ post.id }}/edit">Edit</a>
+        <a href="/post/{{ post.id }}/delete/confirm">Delete</a>
     </div>
     <div class="col-md-10">
         <h1>
-            {{ post.title }}
+            <a href=/post/{{ post.id }}>{{ post.title }}</a>
         </h1>
         {{ post.content | safe }}
     </div>

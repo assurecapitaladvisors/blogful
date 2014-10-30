@@ -1,0 +1,9 @@
+{% import "macros.html" as macros %}
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Are you sure you want to delete this post?</h2>
+<a href="/post/{{ post.id }}/delete"><button type="submit" class="btn btn-default">Yes</button></a>
+<a href="/"><button type="submit" class="btn btn-default">No</button></a>
+
+{% endblock %}
