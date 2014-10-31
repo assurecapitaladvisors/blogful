@@ -13,6 +13,7 @@ from werkzeug.security import check_password_hash
 from models import User
 
 from flask.ext.login import login_required
+from flask.ext.login import current_user
 
 # Login views
 
@@ -103,6 +104,7 @@ def add_post_post():
     post = Post(
         title=request.form["title"],
         content=mistune.markdown(request.form["content"]),
+        author=current_user
     )
     session.add(post)
     session.commit()
