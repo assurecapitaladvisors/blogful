@@ -12,7 +12,7 @@ from flask.ext.login import login_user
 from werkzeug.security import check_password_hash
 from models import User
 
-from flask.ext.login import login_required
+from flask.ext.login import login_required, logout_user
 from flask.ext.login import current_user
 
 # Login views
@@ -33,6 +33,11 @@ def login_post():
     login_user(user)
     return redirect(request.args.get('next') or url_for("posts"))
 
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect(url_for("posts"))
+    
 # Data views
 
 @app.route("/")
@@ -70,11 +75,15 @@ def get_post(postId=None):
 @app.route("/post/<int:postId>/edit", methods=["GET"])
 def edit_post_get(postId=None):
     post = session.query(Post).filter(Post.id==postId).all()[0]
+    if (post.author.id != current_user.id):
+        return redirect(url_for("posts"))
     return render_template("edit_post.html", post=post)
 
 @app.route("/post/<int:postId>/edit", methods=["POST"])
 def edit_post_post(postId=None):
     post = session.query(Post).filter(Post.id==postId).all()[0]
+    if (post.author.id != current_user.id):
+        return redirect(url_for("posts"))    
     post.title = request.form["title"]
     post.content = mistune.markdown(request.form["content"])
     session.add(post)
@@ -84,11 +93,15 @@ def edit_post_post(postId=None):
 @app.route("/post/<int:postId>/delete/confirm")
 def delete_post_confirm(postId=None):
     post = session.query(Post).filter(Post.id==postId).all()[0]
+    if (post.author.id != current_user.id):
+        return redirect(url_for("posts"))
     return render_template("confirm_delete.html", post=post)
 
 @app.route("/post/<int:postId>/delete")
 def delete_post(postId=None):
     post = session.query(Post).filter(Post.id==postId).all()[0]
+    if (post.author.id != current_user.id):
+        return redirect(url_for("posts"))
     session.delete(post)
     session.commit()
     return redirect(url_for("posts"))
